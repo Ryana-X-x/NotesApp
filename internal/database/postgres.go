@@ -20,6 +20,10 @@ func ConnectDatabase(cfg *config.Config) *gorm.DB {
 	)
 	
 	//the values that dsn is getting from the config file and then we are using it to connect to the database
+	log.Println("Connecting to database:", cfg.DBName)
+	log.Println("DB User:", cfg.DBUser)
+
+
 	db, err:= gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Failed to connect to database: ", err)

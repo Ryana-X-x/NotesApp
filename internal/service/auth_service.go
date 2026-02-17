@@ -36,3 +36,22 @@ func (s *AuthService) Register(email, password string) error {
 
 	return s.userRepo.Create(&user)
 }
+func (s *AuthService) Login(email, password string) (string, error) {
+	user, err := s.userRepo.FindByEmail(email)
+	if err != nil || user.ID == 0 {
+		return "", errors.New("invalid email or password")
+	}
+
+	// Compare password
+	if err := utils.CheckPassword(password, user.Password); err != nil {
+		return "", errors.New("invalid email or password")
+	}
+
+	// Generate JWT
+	token, err := utils.GenerateJWT(user.ID)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
+}
